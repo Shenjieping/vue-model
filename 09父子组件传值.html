@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="jslib/vue.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="app">
+			<v-header></v-header>
+			
+			
+		</div>
+		<template id="header">
+			<header>
+				<h2>这里是头部区域----{{msg}}</h2>
+				<button @click="addCount()">增加计数</button>{{num}}
+				<hr />
+				<v-nav :message="msg" :number="num"></v-nav>
+			</header>
+		</template>
+		<template id="nav">
+			<nav>
+				<ul>
+					<li>首页----{{message}}</li>
+					<li>手机-----{{number}}</li>
+				</ul>
+			</nav>
+		</template>
+	</body>
+	<script type="text/javascript">
+//		Vue.component("v-nav",{
+//			template:"#nav"
+//		})
+		var  vw = new Vue({
+			el:"#app",
+			data:{
+				
+			},
+			components:{ // 组件的注册------嵌套组件
+				"v-header":{ //定义并注册了v-header组件
+					template:"#header",
+					data:function(){
+						return {
+							msg:"我是父组件的msg",
+							num:100
+						}
+					},
+					methods:{
+						addCount:function(){
+							this.num++;
+						}
+					},
+					components:{ //v-header内部又注册了一个组件 v-nav
+						"v-nav":{
+							//作用就是在子组件中进行了初始化操作，并且将这个变量的值与父组件同步
+							props:["message","number"],
+							template:"#nav",
+//							data:function(){
+//								return {
+//									message:"我是父组件的msg",
+//									number:100
+//								}
+//							}
+						}
+					}
+				}
+			}
+		})
+	</script>
+</html>

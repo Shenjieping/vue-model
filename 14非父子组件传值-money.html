@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="jslib/vue.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="app">
+			<v-usera></v-usera>
+			<hr />
+			<v-userb></v-userb>
+			<hr />
+			<v-userc></v-userc>
+		</div>
+		<template id="usera">
+			<div>
+				<h1>我是A</h1>
+				<h2>我刚毕业，在九东上班呢</h2>
+				<button @click="sendMoney()">我们经常发奖金（九东上班）</button>
+			</div>
+		</template>
+		<template id="userb">
+			<div>
+				<h1>我是B</h1>
+				<h2>我工作了2年啦，准备换工作，去九东</h2>
+				<button @click="sendMoney()">我们不常发奖金，我要换工作</button>
+				<button @click="test()">等待面试</button>
+				<button @click="getJiuDong()">加入九东(面试通过，等待入职通知书)</button>
+			</div>
+		</template>
+		<template id="userc">
+			<div>
+				<h3>我是宗主，我负责给你们发钱</h3>
+				{{info}}
+				<br />
+				a说：{{ainfo}}<br />
+				b说: {{binfo}}   <button @click="sendTest()">发面试邀请函</button>  <button @click="welcome()">来吧，欢迎加入（发入职通知书）</button>
+			</div>
+		</template>
+	</body>
+	<script type="text/javascript">
+		/*
+		 	1、创建一个空的Vue实例对象 Ev
+		 	2、在需要广播的每一个组件中有一个事件进行去触发   Ev.$emit("该组件触发标识"，params)
+		 	3、在需要接受数据的组件例，通过Ev.$on("可以监听道德标识"，function(msg){}),msg即代表所传递过来的数据
+		 * */
+		var Ev = new Vue();
+		
+		var usera = {
+			template:"#usera",
+			data:function(){
+				return {
+					info:"宗主，我收到10K啦"
+				}
+			},
+			methods:{
+				sendMoney:function(){
+					Ev.$emit("a-send",this.info)
+				}
+			}
+		}
+		var userb = {
+			template:"#userb",
+			data:function(){
+				return {
+					info:"宗主，我们没有奖金，听说你们有，我要加入你们"
+				}
+			},
+			methods:{
+				sendMoney:function(){
+					Ev.$emit("b-send",this.info)
+				},
+				test:function(){
+					Ev.$on("test",function(msg){
+						alert(msg)
+					})
+				},
+				getJiuDong:function(){
+					Ev.$on("offer",function(msg){
+						alert(msg)
+					})
+				}
+			}
+		}
+		var userc = {
+			template:"#userc",
+			data:function(){
+				return {
+					info:"哈哈，我是宗主，你们有什么想跟我说的",
+					ainfo:"",
+					binfo:"",
+					testinfo:"您好，欢迎您来面试",
+					offerinfo:"你好,b,欢迎加入"
+				}
+			},
+			mounted:function(){//宗主一上班就说了
+				var that = this;
+				//宗主听A说
+				Ev.$on("a-send",function(msg){
+					that.ainfo = msg
+				})
+				
+				//宗主听B说
+				Ev.$on("b-send",function(msg){
+					that.binfo = msg
+				})
+			},
+			methods:{
+				sendTest:function(){
+					Ev.$emit("test",this.testinfo)
+				},
+				welcome:function(){
+					Ev.$emit("offer",this.offerinfo)
+				}
+			}
+			
+		}
+		
+		new Vue({
+			el:"#app",
+			data:{
+				
+			},
+			components:{
+				"v-usera":usera,
+				"v-userb":userb,
+				"v-userc":userc
+			}
+		})
+	</script>
+</html>

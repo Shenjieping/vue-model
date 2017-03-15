@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="jslib/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			*{padding: 0;margin: 0;}
+			html,body,#app{
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+			}
+			#app{
+				display: flex;
+				flex-direction: column;
+			}
+			.header{
+				width: 100%;
+				height: 44px;
+				background-color: #f66;
+				color: #fff;
+				text-align: center;
+				line-height: 44px;
+			}
+			.content{
+				flex: 1;
+				overflow-y: auto;
+			}
+			.footer{
+				width: 100%;
+				height: 50px;
+				background-color: #efefef;
+				color: #333;
+				text-align: center;
+				line-height: 50px;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<v-header></v-header>
+			<v-content></v-content>
+			<v-footer></v-footer>
+		</div>
+	</body>
+	<script type="text/javascript">
+//		1.定义组件		----   vue1.0
+		var Header = Vue.extend({
+			template:"<header class='header'>这里是头部组件</header>"
+		});
+		var Content = Vue.extend({
+			template:"<div class='content'>这里是内容区域</div>"
+		});
+		var Footer = Vue.extend({
+			template:"<footer class='footer'>这里是底部区域</footer>"
+		});
+		//2.注册组件
+		Vue.component("v-header",Header);
+		Vue.component("v-content",Content);
+		Vue.component("v-footer",Footer);
+		//3.使用组件----在html代码中使用<v-header></v-header>来实现
+		var  vw = new Vue({
+			el:"#app",
+			data:{
+				
+			},
+			computed:{
+				
+			},
+			methods:{
+				
+			}
+		})
+	</script>
+</html>

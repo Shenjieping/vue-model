@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="jslib/vue.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="app">
+			<v-header></v-header>
+		</div>
+		<template id="header">
+			<header>
+				<h2>我是父组件</h2>
+				{{msg}}
+				<hr />
+				<!--切记不要加()-->
+				<v-nav @to-parent = "getChildData"></v-nav>
+			</header>
+		</template>
+		<template id="nav">
+			<header>
+				<h3>我是子组件</h3>
+				<button @click="sendData()">发送数据给父组件</button>
+			</header>
+		</template>
+	</body>
+	<script type="text/javascript">
+		//子组件給父组件传值，需要我们子组件中有一个事件进行去触发，并且我们定义一个规则，然后在父组件中进行接收
+		//子组件进行一个操作-----广播操作       ----node(emit    on)
+		//vue 广播  $emit    this.$emit("to-parent",params)
+		//父组件中 调用子组件的地方（传参数的地方   <v-nav></v-nav>）执行之前子组件所广播的那个事件
+		//<v-nav @to-parent="父组件事件"></v-nav>,此时即可在父组件事件中拿到子组件所传递的params
+		
+		/*
+		 
+		 * 父组件中执行获取子组件数据的时候，切记不要加(),它会自己判断接收的数据
+		 * 因为子组件在广播事件的时候，就已经给我们设定好了接收的数据，如果加了(),表示这个事件你得需要传递你的数据，
+		 * 而不是去接收数据
+		 * 广播的事件此案例中写的是 to-parent    你可以自己去指定，只要你能看得懂-------语义化
+		 * */
+		var vw = new Vue({
+			el:"#app",
+			data:{
+				
+			},
+			components:{
+				"v-header":{
+					template:"#header",
+					data:function(){
+						return {
+							msg:"我是父组件中的msg"
+						}
+					},
+					methods:{
+						getChildData:function(msg){
+//							alert(msg)
+							this.msg = msg
+						}
+					},
+					components:{
+						"v-nav":{
+							template:"#nav",
+							data:function(){
+								return {
+									childMsg:"我是子组件"
+								}
+							},
+							methods:{
+								sendData:function(){
+									//广播操作
+									this.$emit("to-parent",this.childMsg);
+								}
+							}
+						}
+					}
+				}
+			}
+		})
+	</script>
+</html>

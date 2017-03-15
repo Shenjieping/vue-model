@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="jslib/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			*{padding: 0;margin: 0;}
+			html,body,#app{
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+			}
+			#app{
+				display: flex;
+				flex-direction: column;
+			}
+			.header{
+				width: 100%;
+				height: 44px;
+				background-color: #f66;
+				color: #fff;
+				text-align: center;
+				line-height: 44px;
+			}
+			.content{
+				flex: 1;
+				overflow-y: auto;
+			}
+			.footer{
+				width: 100%;
+				height: 50px;
+				background-color: #efefef;
+				color: #333;
+				text-align: center;
+				line-height: 50px;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			{{msg}}
+			<v-header>111111111111111111111</v-header>
+			<v-content></v-content>
+			<v-footer></v-footer>
+		</div>
+		
+		
+		<template id="header">
+			<header class='header'>
+				<button @click='run()'>点击{{txt}}</button>
+				这头部*****{{msg}}
+				<input type='text' v-model='txt'/>
+			</header>
+		</template>
+		
+		
+	</body>
+	<script type="text/javascript">
+//		1.定义组件		----   区别于第一种，不需要使用Vue.extend()，直接使用字面量来定义
+		//如果需要在组件内部使用{{}}来进行显示数据，必须在此组件内部定义我们的数据源
+		//如果需要初始化数据，则需要使用到data:function(){return {}},其他的计算属性，监听，方法使用规则都一样
+		//访问data数据和之前一样，都可以通过this.msg直接访问到数据
+		
+		//组件模板之--script      <script type="x-template" id="header"><、/script>
+		//script标签的类型必须为x-template 而且必须指定 id  用于定义组件的时候使用template:"#header"
+		//在组件模板内部，必须使用一个共同的父级标签进行包裹
+		
+		//组件模板之 ---template    将上一种方案的script type="x-template" 替换为<template></template>   ----------------------********重点推荐使用
+		var Header = {
+			template:"#header",
+			data:function(){
+				return {
+					txt:"",
+					msg:"小组件"
+				}
+			},
+			watch:{
+				txt:function(newVal){
+					this.msg = newVal
+					console.log(newVal)
+				}
+			},
+			methods:{
+				run:function(){
+					alert("run")
+				}
+			}
+			
+		}
+		var Content = {
+			template:"<div class='content'>这里是内容区域</div>"
+		}
+		var Footer = {
+			template:"<footer class='footer'>这里是底部区域</footer>"
+		}
+		//2.注册组件  ---Vue 实例   components选项中
+		
+		//3.使用组件----在html代码中使用<v-header></v-header>来实现
+		var  vw = new Vue({
+			el:"#app",
+			data:{
+				msg:"我是组件"
+			},
+			components:{
+				"v-header":Header,
+				"v-content":Content,
+				"v-footer":Footer
+			}
+		})
+	</script>
+</html>

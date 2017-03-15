@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="jslib/vue.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="app">
+			{{msg}}
+			<v-header></v-header>
+			
+		</div>
+		<template id="header">
+			<header>
+				<h1>这里是头部区域-----{{msg}}</h1>
+				<!--<nav>
+					<ul>
+						<li>111111</li>
+						<li>222222</li>
+						<li>333333</li>
+					</ul>
+				</nav>-->
+				<v-nav :message="msg" :username="username" :my-age-test="age"></v-nav>
+			</header>
+		</template>
+		<template id="nav">
+			<nav>
+				<ul>
+					<li>111111 ----  {{message}}</li>
+					<li>222222 ----  {{username}}</li>
+					<li>333333 ----  {{myAgeTest}}</li>
+				</ul>
+			</nav>
+		</template>
+	</body>
+	<script type="text/javascript">
+		var vw = new Vue({
+			el:"#app",
+			data:{
+				msg:"测试一下"
+			},
+			components:{
+				"v-header":{
+					template:"#header",
+					data:function(){
+						return {
+							msg:"我来自header组件",
+							username:"zhangsan",
+							age:"20"
+						}
+					},
+					components:{
+						"v-nav":{
+//							props:["message","username","age"],
+							props:{
+								"message":Number,
+								"username":String,
+								"myAgeTest":Number
+							},
+							template:"#nav"
+						}
+					}
+				},
+				
+			}
+		})
+	</script>
+</html>

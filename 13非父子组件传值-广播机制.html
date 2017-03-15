@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="jslib/vue.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="app">
+			<v-tema></v-tema>
+			<v-temb></v-temb>
+			<hr />
+			<v-temc></v-temc>
+		</div>
+		<template id="temA">
+			<div>
+				<h1>我是A组件</h1>
+				<br />
+				{{getdata}}
+				<button @click="sendData()">发送数据给他人</button>
+			</div>
+		</template>
+		<template id="temB">
+			<div>
+				<h1>我是B组件</h1>
+				<br />
+				{{getdata}}
+				<button @click="sendData()">发送数据给他人</button>
+				<button @click="getDataC()">接受C的数据</button>
+				
+			</div>
+		</template>
+		<template id="temC">
+			<div>
+				<h1>我是C组件</h1>
+				我接受到了数据
+				<br />
+				a的数据是：{{atxt}}
+				<br />
+				b的数据是：{{btxt}}
+				<br />
+				<input type="text" v-model="msg"/>
+				<button @click="sendData()">发送数据给他人</button>
+			</div>
+		</template>
+	</body>
+	<script type="text/javascript">
+		/*
+		 	1、创建一个空的Vue实例对象 Ev
+		 	2、在需要广播的每一个组件中有一个事件进行去触发   Ev.$emit("该组件触发标识"，params)
+		 	3、在需要接受数据的组件例，通过Ev.$on("可以监听道德标识"，function(msg){}),msg即代表所传递过来的数据
+		 * */
+		
+		var Ev = new Vue();
+		//定义组件
+		var temA = {
+			template:"#temA",
+			data:function(){
+				return {
+					msg:"我是A组件中的数据",
+					getdata:""
+				}
+			},
+			mounted:function(){
+				var that = this;
+				Ev.$on("c-send",function(msg){
+//					alert(msg);
+					that.getdata = msg;
+					
+				});
+			},
+			methods:{
+				sendData:function(){
+					//广播
+					Ev.$emit("a-send",this.msg)
+				}
+			}
+		}
+		
+		var temB = {
+			template:"#temB",
+			data:function(){
+				return {
+					msg:"我是B组件中的数据",
+					getdata:""
+				}
+			},
+			mounted:function(){
+				
+			},
+			methods:{
+				sendData:function(){
+					//广播
+					Ev.$emit("b-send",this.msg)
+				},
+				getDataC:function(){
+					var that = this;
+					Ev.$on("c-send",function(msg){
+//						alert(msg);
+						that.getdata += msg;
+						
+					});
+				}
+			}
+		}
+		
+		
+		var temC = {
+			template:"#temC",
+			data:function(){
+				return {
+					atxt:"",
+					btxt:"",
+					msg:"我是C的数据"
+				}
+			},
+			mounted:function(){
+				var that = this;
+				Ev.$emit("c-send",that.msg);
+				Ev.$on("a-send",function(msg){
+//					alert(msg);
+					that.atxt = msg;
+					
+				});
+				Ev.$on("b-send",function(msg){
+//					alert(msg)
+					that.btxt = msg;
+				});
+			},
+			methods:{
+				sendData:function(){
+					//广播
+					Ev.$emit("c-send",this.msg)
+				},
+			}
+		}
+		
+		
+		
+		
+		new Vue({
+			el:"#app",
+			data:{
+				
+			},
+			components:{//注册组件
+				"v-tema":temA,
+				"v-temb":temB,
+				"v-temc":temC
+			}
+		})
+	</script>
+</html>

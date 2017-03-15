@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="jslib/vue.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="app">
+			<v-header></v-header>
+			
+			
+		</div>
+		<template id="header">
+			<header>
+				<h2>这里是头部区域</h2>
+				<v-nav></v-nav>
+			</header>
+		</template>
+		<template id="nav">
+			<nav>
+				<ul>
+					<li>首页</li>
+					<li>手机</li>
+				</ul>
+			</nav>
+		</template>
+	</body>
+	<script type="text/javascript">
+//		Vue.component("v-nav",{
+//			template:"#nav"
+//		})
+		var  vw = new Vue({
+			el:"#app",
+			data:{
+				
+			},
+			components:{ // 组件的注册------嵌套组件
+				"v-header":{ //定义并注册了v-header组件
+					template:"#header",
+					components:{ //v-header内部又注册了一个组件 v-nav
+						"v-nav":{
+							template:"#nav"
+						}
+					}
+				}
+			}
+		})
+	</script>
+</html>
